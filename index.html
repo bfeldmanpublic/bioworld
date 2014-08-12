@@ -2,11 +2,75 @@
 <head>
 	<title>Bio World</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	<link rel="stylesheet" href="css/shared.css?v=1">
-	<link rel="stylesheet" href="css/this.css?v=1">
+	<!-- <link rel="stylesheet" href="css/shared.css?v=1"> -->
+	<link rel="stylesheet" href="css/mainMenu.css?v=1">
 	<script src="js/jquery.js.min?v=1"></script>
 </head>
 <body>
-
+	<header>
+		<h1>Bio World</h2>
+	</header>
+	<div id="menu">
+		<span class="menuOption selected" id="option1" >
+			<h2>Plain Mode</h2>
+		</span>
+		<span class="menuOption" id="option2">
+			<h2>Game Mode</h2>
+		</span>
+		<span class="menuOption" id="option3">
+			<h2>Hxck3r M0d3</h2>
+		</span>
+	</div>
+	<footer>&copy Brian Feldman, 2014</footer>
 </body>
+<script type="text/javascript">
+	var selectedOption = 0;
+	var menuToggleAudio = new Audio('media/audio/menuToggleAudio.m4a');
+
+	$(window).keydown(function(e) {
+        var key = e.which;
+        //do stuff with "key" here...
+        switch (key){
+       		case 38: //up
+       			if(selectedOption>0){
+       				selectedOption--;
+       			}else{
+       				//selectedOption = $('.menuOption').length-1;
+       			}
+       			
+       			changeMenuSelection(selectedOption);
+       			break;
+       		
+       		case 40: //down
+       			if(selectedOption<($('.menuOption').length-1)){
+       				selectedOption++;
+       			}else{
+       				//selectedOption = 0;
+       			}
+       			
+       			changeMenuSelection(selectedOption);
+       			break;
+       		
+       		default:
+       			break;
+        }
+
+        
+   	});
+
+	$(".menuOption").click(function(){
+		var selectedID = $(this).index();
+		changeMenuSelection(selectedID);
+	});
+
+	function changeMenuSelection(id){
+		menuToggleAudio.pause();
+		menuToggleAudio.currentTime = 0;
+		menuToggleAudio.play();
+		$(".menuOption").removeClass("selected");
+		$(".menuOption:eq("+id+")").addClass("selected");
+	}
+
+
+</script>
 </html>
