@@ -26,9 +26,6 @@
 	<div id="gameWorld">
 		<div class="character"></div>
 		<div class="scene">
-			<span class="platform"></span>
-			<span class="platform"></span>
-			<span class="platform"></span>
 		</div>
 	</div>
 	<div id="hackerWorld">
@@ -79,35 +76,85 @@
 		$(window).keydown(function(e) {
 	        var key = e.which;
 	        console.log(key);
-	        //do stuff with "key" here...
-	        if(currentState=="mainMenu"){
-		        switch (key){
-		       		case 38: //up
-		       			if(selectedOption>0){
-		       				selectedOption--;
-		       			}else{ //Allow this for wrap around
-		       				//selectedOption = $('.menuOption').length-1;
-		       			}
-		       			
-		       			changeMenuSelection(selectedOption);
-		       			break;
-		       		
-		       		case 40: //down
-		       			if(selectedOption<($('.menuOption').length-1)){
-		       				selectedOption++;
-		       			}else{ //Allow this for wrap around
-		       				//selectedOption = 0;
-		       			}
-		       			
-		       			changeMenuSelection(selectedOption);
-		       			break;
-		       		
-		       		case 13: //enter
-		       			submitMenuSelection();
-		       		
-		       		default:
-		       			break;
-		        }
+	        switch (currentState){     	
+	        	
+	        	case "mainMenu":
+			        switch (key){
+			       		case 38: //up
+			       			if(selectedOption>0){
+			       				selectedOption--;
+			       			}else{ //Allow this for wrap around
+			       				//selectedOption = $('.menuOption').length-1;
+			       			}
+			       			
+			       			changeMenuSelection(selectedOption);
+			       			break;
+			       		
+			       		case 40: //down
+			       			if(selectedOption<($('.menuOption').length-1)){
+			       				selectedOption++;
+			       			}else{ //Allow this for wrap around
+			       				//selectedOption = 0;
+			       			}
+			       			
+			       			changeMenuSelection(selectedOption);
+			       			break;
+			       	
+			       		case 13: //enter
+			       			submitMenuSelection();
+			       		
+			       		default:
+			       			break;
+			        }
+			    		
+		    		break;
+
+		    	case "plainWorld":
+		    		break; 
+
+		    	case "gameWorld":
+
+		    		switch (key){
+			       		case 38: //up
+
+			       			$(".character").css({bottom: '+=10px'}, "fast");
+			       			break;
+			       		
+			       		case 40: //down
+			       			
+			       			$(".character").css({bottom: '-=10px'});
+			       			break;
+			       		
+			       		case 37: //left
+
+			       			if($(".character").css('margin-left')>='0px'){
+			       				$(".character").css({marginLeft: '-=20px'});
+			       			}
+			       			
+			       			break;
+			       	
+			       		case 39: //right
+			       			var charMargL = parseInt($(".character").css("margin-left"), 10);
+			       			var docW = parseInt($(document).width()+"px", 10);
+
+			       			if(charMargL<(docW-50)){
+			       			 	$(".character").css({marginLeft: '+=20px'});
+			       			}
+			       			break;
+
+			       		case 13: //enter
+			       		
+			       		
+			       		default:
+			       			break;
+			        }
+		    		break;
+
+		    	case "hackerWorld":
+		    		break;	
+
+		    	default:
+		    		break;
 		    }
 	   	});
 
@@ -160,6 +207,7 @@
 				break;
 			case "gameWorld":
 				$("body > div").hide();
+				$("#gameWorld").height($("body").height()-100);
 				$("#"+currentState).show();
 				break;
 			case "hackerWorld":
