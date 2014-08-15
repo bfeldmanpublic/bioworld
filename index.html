@@ -4,73 +4,198 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 	<!-- <link rel="stylesheet" href="css/shared.css?v=1"> -->
 	<link rel="stylesheet" href="css/mainMenu.css?v=1">
+	<link rel="stylesheet" href="css/game.css?v=1">
 	<script src="js/jquery.js.min?v=1"></script>
 </head>
 <body>
-	<header>
-		<h1>Bio World</h2>
-	</header>
-	<div id="menu">
-		<span class="menuOption selected" id="option1" >
+	<header><h1>Bio World</h2></header>
+	<div id="mainMenu">
+		<span class="menuOption selected">
 			<h2>Plain Mode</h2>
 		</span>
-		<span class="menuOption" id="option2">
+		<span class="menuOption">
 			<h2>Game Mode</h2>
 		</span>
-		<span class="menuOption" id="option3">
+		<span class="menuOption">
 			<h2>Hxck3r M0d3</h2>
 		</span>
+	</div>
+	<div id="plainWorld">
+
+	</div>
+	<div id="gameWorld">
+		<div class="character"></div>
+		<div class="scene">
+			<span class="platform"></span>
+			<span class="platform"></span>
+			<span class="platform"></span>
+		</div>
+	</div>
+	<div id="hackerWorld">
+
 	</div>
 	<footer>&copy Brian Feldman, 2014</footer>
 </body>
 <script type="text/javascript">
-	var selectedOption = 0;
-	var menuToggleAudio = new Audio('media/audio/menuToggleAudio.m4a');
+(function(){
+	
+	var currentState;
 
-	$(window).keydown(function(e) {
-        var key = e.which;
-        //do stuff with "key" here...
-        switch (key){
-       		case 38: //up
-       			if(selectedOption>0){
-       				selectedOption--;
-       			}else{
-       				//selectedOption = $('.menuOption').length-1;
-       			}
-       			
-       			changeMenuSelection(selectedOption);
-       			break;
-       		
-       		case 40: //down
-       			if(selectedOption<($('.menuOption').length-1)){
-       				selectedOption++;
-       			}else{
-       				//selectedOption = 0;
-       			}
-       			
-       			changeMenuSelection(selectedOption);
-       			break;
-       		
-       		default:
-       			break;
-        }
 
-        
-   	});
+	var loadMainMenuController = function(){
+		var selectedOption = 0;
+		var menuToggleAudio = new Audio('media/audio/menuToggleAudio.m4a');
 
-	$(".menuOption").click(function(){
-		var selectedID = $(this).index();
-		changeMenuSelection(selectedID);
-	});
+		function changeMenuSelection(id){
+			menuToggleAudio.pause();
+			menuToggleAudio.currentTime = 0;
+			menuToggleAudio.play();
+			$(".menuOption").removeClass("selected");
+			$(".menuOption:eq("+id+")").addClass("selected");
+		}
 
-	function changeMenuSelection(id){
-		menuToggleAudio.pause();
-		menuToggleAudio.currentTime = 0;
-		menuToggleAudio.play();
-		$(".menuOption").removeClass("selected");
-		$(".menuOption:eq("+id+")").addClass("selected");
+		function submitMenuSelection(){
+			 switch (selectedOption){
+			 	case 0:
+			 		console.log("Entering plainWorld");
+			 		currentState = "plainWorld";
+			 		changeState();
+			 		break;
+			 	case 1:
+			 		console.log("Entering gameWorld");
+			 		currentState = "gameWorld";
+			 		changeState();
+			 		break;
+			 	case 2:
+			 		console.log("Entering hackerWorld");
+			 		currentState = "hackerWorld";
+			 		changeState();
+			 		break;
+			 	default:
+			 		break;
+			 }
+		}
+
+		$(window).keydown(function(e) {
+	        var key = e.which;
+	        console.log(key);
+	        //do stuff with "key" here...
+	        if(currentState=="mainMenu"){
+		        switch (key){
+		       		case 38: //up
+		       			if(selectedOption>0){
+		       				selectedOption--;
+		       			}else{ //Allow this for wrap around
+		       				//selectedOption = $('.menuOption').length-1;
+		       			}
+		       			
+		       			changeMenuSelection(selectedOption);
+		       			break;
+		       		
+		       		case 40: //down
+		       			if(selectedOption<($('.menuOption').length-1)){
+		       				selectedOption++;
+		       			}else{ //Allow this for wrap around
+		       				//selectedOption = 0;
+		       			}
+		       			
+		       			changeMenuSelection(selectedOption);
+		       			break;
+		       		
+		       		case 13: //enter
+		       			submitMenuSelection();
+		       		
+		       		default:
+		       			break;
+		        }
+		    }
+	   	});
+
+		$(".menuOption").click(function(){
+			selectedOption = $(this).index();
+			changeMenuSelection(selectedOption);
+			submitMenuSelection();
+		});
+
 	}
 
+	var loadGameWorldController = function(){
+		console.log("yippe kayea!");
+		// $(window).keydown(function(e) {
+	 //        var key = e.which;
+	 //        console.log(key);
+	 //        //do stuff with "key" here...
+	 //        switch (key){
+	 //       		case 38: //up
+	       			
+	 //       			break;
+	       		
+	 //       		case 40: //down
+	       	
+	 //       			break;
+	       		
+	 //       		case 13: //enter
+	 
+	       		
+	 //       		default:
+	 //       			break;
+	 //        }
+	 //   	});
+	}
+
+	function changeState(){
+		renderStateView();
+		renderStateController();
+	}		
+
+	function renderStateView(){
+		switch (currentState){
+			case "mainMenu":
+				$("body > div").hide();
+				$("#"+currentState).show();
+				break;
+			case "plainWorld":
+				$("body > div").hide();
+				$("#"+currentState).show();
+				break;
+			case "gameWorld":
+				$("body > div").hide();
+				$("#"+currentState).show();
+				break;
+			case "hackerWorld":
+				$("body > div").hide();
+				$("#"+currentState).show();
+				break;
+			default:
+				currentState = "mainMenu";
+				changeState();
+				break;
+
+		}
+	}
+		
+	function renderStateController(){
+		switch (currentState){
+			case "mainMenu":
+				loadMainMenuController();
+				break;
+			case "plainWorld":
+				//loadPlainWorldController();
+				break;
+			case "gameWorld":
+				loadGameWorldController();
+				break;
+			case "hackerWorld":
+				//loadHackerWorldController();
+				break;
+			default:
+				break;
+		}
+	}
+
+	changeState();
+
+})();
 
 </script>
 </html>

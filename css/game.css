@@ -1,0 +1,44 @@
+#gameWorld{
+	width: 100%;
+	height: calc(100%-100px);
+	background-color: white;
+	/*visibility: hidden;*/
+}
+
+.character{
+	position: fixed;
+	width: 25px;
+	height: 50px;
+	background-color: red;
+	bottom: 40px;
+	margin-left: 50px;
+}
+
+.platform:nth-of-type(1){
+	position: fixed;
+	width:200px;
+	height: 20px;
+	background: yellow;
+	display: block;
+	bottom: 20px;
+}
+
+.platform:nth-of-type(2){
+	position: fixed;
+	width:200px;
+	height: 20px;
+	background: yellow;
+	display: block;
+	margin-left: 250px;
+	bottom: 80px;
+}
+
+.platform:nth-of-type(3){
+	position: fixed;
+	width:200px;
+	height: 20px;
+	background: yellow;
+	display: block;
+	margin-left: 500px;
+	bottom: 160px;
+}
