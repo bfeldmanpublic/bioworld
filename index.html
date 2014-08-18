@@ -44,9 +44,11 @@
 		var menuToggleAudio = new Audio('media/audio/menuToggleAudio.m4a');
 
 		function changeMenuSelection(id){
-			menuToggleAudio.pause();
-			menuToggleAudio.currentTime = 0;
-			menuToggleAudio.play();
+			if($(window).width()>1000){
+				menuToggleAudio.pause();
+				menuToggleAudio.currentTime = 0;
+				menuToggleAudio.play();
+			}
 			$(".menuOption").removeClass("selected");
 			$(".menuOption:eq("+id+")").addClass("selected");
 		}
@@ -116,19 +118,27 @@
 
 		    		switch (key){
 			       		case 38: //up
+			       			var gameWorldHeight = parseInt($("#gameWorld").css("height"), 10);
+			       			var charBot = parseInt($(".character").css("bottom"), 10);
 
-			       			$(".character").css({bottom: '+=10px'}, "fast");
+			       			if(charBot<(gameWorldHeight*.5)){
+			       				$(".character").css({bottom: '+=10px'});
+			       			}	
 			       			break;
 			       		
 			       		case 40: //down
 			       			
-			       			$(".character").css({bottom: '-=10px'});
+			       			var charBot = parseInt($(".character").css("bottom"), 10);
+			       			if(charBot>0){
+			       				$(".character").css({bottom: '-=10px'});
+			       			}
 			       			break;
 			       		
 			       		case 37: //left
 
 			       			if($(".character").css('margin-left')>='0px'){
 			       				$(".character").css({marginLeft: '-=20px'});
+			       				$(".character").addClass("flipped");
 			       			}
 			       			
 			       			break;
@@ -139,6 +149,7 @@
 
 			       			if(charMargL<(docW-50)){
 			       			 	$(".character").css({marginLeft: '+=20px'});
+			       			 	$(".character").removeClass("flipped");
 			       			}
 			       			break;
 
@@ -158,7 +169,7 @@
 		    }
 	   	});
 
-		$(".menuOption").click(function(){
+		$(".menuOption").bind("click touchstart", function(){
 			selectedOption = $(this).index();
 			changeMenuSelection(selectedOption);
 			submitMenuSelection();

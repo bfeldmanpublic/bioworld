@@ -1,14 +1,17 @@
 #gameWorld{
 	width: 100%;
 	background-color: white;
-background: #d82b2b; /* Old browsers */
-background: -moz-linear-gradient(top,  #d82b2b 0%, #d6692a 11%, #d6ca2a 21%, #2989d8 29%, #e2e2e2 38%, #168923 39%, #4f9369 57%, #319154 100%); /* FF3.6+ */
-background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#d82b2b), color-stop(11%,#d6692a), color-stop(21%,#d6ca2a), color-stop(29%,#2989d8), color-stop(38%,#e2e2e2), color-stop(39%,#168923), color-stop(57%,#4f9369), color-stop(100%,#319154)); /* Chrome,Safari4+ */
-background: -webkit-linear-gradient(top,  #d82b2b 0%,#d6692a 11%,#d6ca2a 21%,#2989d8 29%,#e2e2e2 38%,#168923 39%,#4f9369 57%,#319154 100%); /* Chrome10+,Safari5.1+ */
-background: -o-linear-gradient(top,  #d82b2b 0%,#d6692a 11%,#d6ca2a 21%,#2989d8 29%,#e2e2e2 38%,#168923 39%,#4f9369 57%,#319154 100%); /* Opera 11.10+ */
-background: -ms-linear-gradient(top,  #d82b2b 0%,#d6692a 11%,#d6ca2a 21%,#2989d8 29%,#e2e2e2 38%,#168923 39%,#4f9369 57%,#319154 100%); /* IE10+ */
-background: linear-gradient(to bottom,  #d82b2b 0%,#d6692a 11%,#d6ca2a 21%,#2989d8 29%,#e2e2e2 38%,#168923 39%,#4f9369 57%,#319154 100%); /* W3C */
-filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d82b2b', endColorstr='#319154',GradientType=0 ); /* IE6-9 */
+background: #ff4444; /* Old browsers */
+background: -moz-linear-gradient(top,  #ff4444 0%, #ff8935 3%, #ffb938 6%, #719fed 18%, #71ceef 29%, #71ceef 32%, #71ceef 37%, #21b4e2 40%, #21b4e2 40%, #117717 42%, #00a305 75%, #00b214 100%); /* FF3.6+ */
+background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#ff4444), color-stop(3%,#ff8935), color-stop(6%,#ffb938), color-stop(18%,#719fed), color-stop(29%,#71ceef), color-stop(32%,#71ceef), color-stop(37%,#71ceef), color-stop(40%,#21b4e2), color-stop(40%,#21b4e2), color-stop(42%,#117717), color-stop(75%,#00a305), color-stop(100%,#00b214)); /* Chrome,Safari4+ */
+background: -webkit-linear-gradient(top,  #ff4444 0%,#ff8935 3%,#ffb938 6%,#719fed 18%,#71ceef 29%,#71ceef 32%,#71ceef 37%,#21b4e2 40%,#21b4e2 40%,#117717 42%,#00a305 75%,#00b214 100%); /* Chrome10+,Safari5.1+ */
+background: -o-linear-gradient(top,  #ff4444 0%,#ff8935 3%,#ffb938 6%,#719fed 18%,#71ceef 29%,#71ceef 32%,#71ceef 37%,#21b4e2 40%,#21b4e2 40%,#117717 42%,#00a305 75%,#00b214 100%); /* Opera 11.10+ */
+background: -ms-linear-gradient(top,  #ff4444 0%,#ff8935 3%,#ffb938 6%,#719fed 18%,#71ceef 29%,#71ceef 32%,#71ceef 37%,#21b4e2 40%,#21b4e2 40%,#117717 42%,#00a305 75%,#00b214 100%); /* IE10+ */
+background: linear-gradient(to bottom,  #ff4444 0%,#ff8935 3%,#ffb938 6%,#719fed 18%,#71ceef 29%,#71ceef 32%,#71ceef 37%,#21b4e2 40%,#21b4e2 40%,#117717 42%,#00a305 75%,#00b214 100%); /* W3C */
+filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ff4444', endColorstr='#00b214',GradientType=0 ); /* IE6-9 */
+
+
+
 
 
 
@@ -25,6 +28,15 @@ filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#d82b2b', end
 	background-image: url('../media/images/yoshiMario.png');
 	background-size: 75px 100px;
 	background-repeat: no-repeat;
+}
+
+.character.flipped{
+	-moz-transform: scaleX(-1);
+    -o-transform: scaleX(-1);
+    -webkit-transform: scaleX(-1);
+    transform: scaleX(-1);
+    filter: FlipH;
+    -ms-filter: "FlipH";
 }
 
 .platform:nth-of-type(1){
