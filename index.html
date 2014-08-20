@@ -9,250 +9,232 @@
 </head>
 <body>
 	<header><h1>Bio World</h2></header>
-	<div id="mainMenu">
-		<span class="menuOption selected">
-			<h2>Plain Mode</h2>
-		</span>
-		<span class="menuOption">
-			<h2>Game Mode</h2>
-		</span>
-		<span class="menuOption">
-			<h2>Hxck3r M0d3</h2>
-		</span>
-	</div>
-	<div id="plainWorld">
-
-	</div>
-	<div id="gameWorld">
-		<div class="character"></div>
-		<div class="scene">
-		</div>
-	</div>
-	<div id="hackerWorld">
-
-	</div>
+	<div id="canvas"></div>
 	<footer>&copy Brian Feldman, 2014</footer>
 </body>
 <script type="text/javascript">
 (function(){
 	
-	var currentState;
+	var currentState = "MainMenu";
 
+	var MainMenu = {
 
-	var loadMainMenuController = function(){
-		var selectedOption = 0;
-		var menuToggleAudio = new Audio('media/audio/menuToggleAudio.m4a');
+		selectedOption: 0,
+		menuToggleAudio: new Audio('media/audio/menuToggleAudio.m4a'),
+		buttons: ["Plain Mode", "Game Mode", "Hxck3r Mode"],
+		
+		render: function(){
+			
+			
+			this.mainMenu = document.createElement('div');
+			this.mainMenu.id = "mainMenu";
+			$('#canvas').append(this.mainMenu);
 
-		function changeMenuSelection(id){
-			if($(window).width()>1000){
-				menuToggleAudio.pause();
-				menuToggleAudio.currentTime = 0;
-				menuToggleAudio.play();
+			for(i=0; i<this.buttons.length; i++){
+				
+				this.span = document.createElement('span');
+				this.span.setAttribute('class', 'menuOption');
+				$(this.span).addClass(i ? '':'selected');
+				this.mainMenu.appendChild(this.span);
+
+				this.h2 = document.createElement('h2');
+				this.h2.innerHTML = this.buttons[i];
+				this.span.appendChild(this.h2);
+
+				console.log(this.buttons[i]);
 			}
-			$(".menuOption").removeClass("selected");
-			$(".menuOption:eq("+id+")").addClass("selected");
-		}
 
-		function submitMenuSelection(){
-			 switch (selectedOption){
+			this.loadKeysController();
+			this.loadClickController();
+		},
+
+		changeMenuSelection: function(){
+			if($(window).width()>1000){
+				this.playMenuToggleSound();
+			}
+			console.log(this.selectedOption);
+			$(".menuOption").removeClass("selected");
+			$(".menuOption:eq("+this.selectedOption+")").addClass("selected");
+		},
+	
+		playMenuToggleSound: function(){
+			this.menuToggleAudio.pause();
+			this.menuToggleAudio.currentTime = 0;
+			this.menuToggleAudio.play();
+		},
+
+		loadKeysController: function(){
+			$(window).keydown(function(e) {
+				var key = e.which;
+		        //console.log(key);
+		        switch (key){
+		       		case 38: //up
+		       			if(MainMenu.selectedOption>0){
+		       				MainMenu.selectedOption--;
+		       			}else{ //Allow this for wrap around
+		       				//selectedOption = $('.menuOption').length-1;
+		       			}
+		       			
+		       			MainMenu.changeMenuSelection();
+		       			break;
+		       		
+		       		case 40: //down
+		       			if(MainMenu.selectedOption<($('.menuOption').length-1)){
+		       				MainMenu.selectedOption++;
+		       			}else{ //Allow this for wrap around
+		       				//selectedOption = 0;
+		       			}
+		       			
+		       			MainMenu.changeMenuSelection();
+		       			break;
+		       	
+		       		case 13: //enter
+		       			MainMenu.submitMenuSelection();
+		       		
+		       		default:
+		       			break;
+				}
+			});
+		},
+
+		loadClickController: function(){
+			
+			$(".menuOption").bind("click touchstart", function(){
+				MainMenu.selectedOption = $(this).index();
+				MainMenu.changeMenuSelection(MainMenu.selectedOption);
+				MainMenu.submitMenuSelection();
+			});
+		},
+
+		submitMenuSelection: function(){
+			switch (this.selectedOption){
 			 	case 0:
 			 		console.log("Entering plainWorld");
-			 		currentState = "plainWorld";
-			 		changeState();
+			 		currentState = "PlainWorld";
+			 		renderPage();
 			 		break;
 			 	case 1:
 			 		console.log("Entering gameWorld");
-			 		currentState = "gameWorld";
-			 		changeState();
+			 		currentState = "GameWorld";
+			 		renderPage();
 			 		break;
 			 	case 2:
 			 		console.log("Entering hackerWorld");
-			 		currentState = "hackerWorld";
-			 		changeState();
+			 		currentState = "HackerWorld";
+			 		renderPage();
 			 		break;
 			 	default:
 			 		break;
-			 }
+			}
 		}
-
-		$(window).keydown(function(e) {
-	        var key = e.which;
-	        console.log(key);
-	        switch (currentState){     	
-	        	
-	        	case "mainMenu":
-			        switch (key){
-			       		case 38: //up
-			       			if(selectedOption>0){
-			       				selectedOption--;
-			       			}else{ //Allow this for wrap around
-			       				//selectedOption = $('.menuOption').length-1;
-			       			}
-			       			
-			       			changeMenuSelection(selectedOption);
-			       			break;
-			       		
-			       		case 40: //down
-			       			if(selectedOption<($('.menuOption').length-1)){
-			       				selectedOption++;
-			       			}else{ //Allow this for wrap around
-			       				//selectedOption = 0;
-			       			}
-			       			
-			       			changeMenuSelection(selectedOption);
-			       			break;
-			       	
-			       		case 13: //enter
-			       			submitMenuSelection();
-			       		
-			       		default:
-			       			break;
-			        }
-			    		
-		    		break;
-
-		    	case "plainWorld":
-		    		break; 
-
-		    	case "gameWorld":
-
-		    		switch (key){
-			       		case 38: //up
-			       			var gameWorldHeight = parseInt($("#gameWorld").css("height"), 10);
-			       			var charBot = parseInt($(".character").css("bottom"), 10);
-
-			       			if(charBot<(gameWorldHeight*.5)){
-			       				$(".character").css({bottom: '+=10px'});
-			       			}	
-			       			break;
-			       		
-			       		case 40: //down
-			       			
-			       			var charBot = parseInt($(".character").css("bottom"), 10);
-			       			if(charBot>0){
-			       				$(".character").css({bottom: '-=10px'});
-			       			}
-			       			break;
-			       		
-			       		case 37: //left
-
-			       			if($(".character").css('margin-left')>='0px'){
-			       				$(".character").css({marginLeft: '-=20px'});
-			       				$(".character").addClass("flipped");
-			       			}
-			       			
-			       			break;
-			       	
-			       		case 39: //right
-			       			var charMargL = parseInt($(".character").css("margin-left"), 10);
-			       			var docW = parseInt($(document).width()+"px", 10);
-
-			       			if(charMargL<(docW-50)){
-			       			 	$(".character").css({marginLeft: '+=20px'});
-			       			 	$(".character").removeClass("flipped");
-			       			}
-			       			break;
-
-			       		case 13: //enter
-			       		
-			       		
-			       		default:
-			       			break;
-			        }
-		    		break;
-
-		    	case "hackerWorld":
-		    		break;	
-
-		    	default:
-		    		break;
-		    }
-	   	});
-
-		$(".menuOption").bind("click touchstart", function(){
-			selectedOption = $(this).index();
-			changeMenuSelection(selectedOption);
-			submitMenuSelection();
-		});
-
-	}
-
-	var loadGameWorldController = function(){
-		console.log("yippe kayea!");
-		// $(window).keydown(function(e) {
-	 //        var key = e.which;
-	 //        console.log(key);
-	 //        //do stuff with "key" here...
-	 //        switch (key){
-	 //       		case 38: //up
-	       			
-	 //       			break;
-	       		
-	 //       		case 40: //down
-	       	
-	 //       			break;
-	       		
-	 //       		case 13: //enter
-	 
-	       		
-	 //       		default:
-	 //       			break;
-	 //        }
-	 //   	});
-	}
-
-	function changeState(){
-		renderStateView();
-		renderStateController();
-	}		
-
-	function renderStateView(){
-		switch (currentState){
-			case "mainMenu":
-				$("body > div").hide();
-				$("#"+currentState).show();
-				break;
-			case "plainWorld":
-				$("body > div").hide();
-				$("#"+currentState).show();
-				break;
-			case "gameWorld":
-				$("body > div").hide();
-				$("#gameWorld").height($("body").height()-100);
-				$("#"+currentState).show();
-				break;
-			case "hackerWorld":
-				$("body > div").hide();
-				$("#"+currentState).show();
-				break;
-			default:
-				currentState = "mainMenu";
-				changeState();
-				break;
-
-		}
-	}
 		
-	function renderStateController(){
+	};
+	
+	var GameWorld = {
+		
+		height: $("body").height()-100,
+		getCharBot: function(){
+			return parseInt($(".character").css("bottom"), 10);
+		},
+		getCharMargL: function(){
+			return parseInt($(".character").css("margin-left"), 10);
+		},
+		getDocWidth: function(){
+			return parseInt($(document).width()+"px", 10);
+		},
+
+		render: function(){
+			this.gameWorld = document.createElement('div');
+			this.gameWorld.id = "gameWorld";
+			this.gameWorld.style.height = this.height;
+			$('#canvas').append(this.gameWorld);
+
+			this.character = document.createElement('div');
+			this.character.setAttribute('class', 'character');
+			this.gameWorld.appendChild(this.character);
+
+			this.scene = document.createElement('div');
+			this.scene.setAttribute('class', 'scene');
+			this.gameWorld.appendChild(this.scene);
+
+			this.loadKeysController();
+		},
+
+		loadKeysController: function(){
+			$(window).keydown(function(e) {
+				var key = e.which;
+		        //console.log(key);
+		        switch (key){
+		       		case 38: //up
+		       			
+		       			if(GameWorld.getCharBot()<(GameWorld.height*.5)){
+		       				$(".character").css({bottom: '+=10px'});
+		       			}	
+		       			break;
+		       		
+		       		case 40: //down
+		       			
+		       			var charBot = parseInt($(".character").css("bottom"), 10);
+		       			if(GameWorld.getCharBot()>0){
+		       				$(".character").css({bottom: '-=10px'});
+		       			}
+		       			break;
+		       		
+		       		case 37: //left
+		       			
+		       			if($(".character").css('margin-left')>='0px'){
+		       				$(".character").css({marginLeft: '-=20px'});
+		       				$(".character").addClass("flipped");
+		       			}
+		       			
+		       			break;
+		       	
+		       		case 39: //right
+		       			
+		       			var charMargL = parseInt($(".character").css("margin-left"), 10);
+		       			var docW = parseInt($(document).width()+"px", 10);
+
+		       			if(GameWorld.getCharMargL()<(GameWorld.getDocWidth()-50)){
+		       			 	$(".character").css({marginLeft: '+=20px'});
+		       			 	$(".character").removeClass("flipped");
+		       			}
+		       			break;
+
+		       		case 13: //enter
+		       		
+		       			break;
+		       		
+		       		default:
+		       			break;
+		        }
+			});
+		},
+	};
+
+	function renderPage(){
+		$(window).unbind('keydown');
+		$("#canvas").empty();
 		switch (currentState){
-			case "mainMenu":
-				loadMainMenuController();
+			case "MainMenu":
+				MainMenu.render();
 				break;
-			case "plainWorld":
-				//loadPlainWorldController();
+			case "PlainWorld":
+				PlainWorld.render();
 				break;
-			case "gameWorld":
-				loadGameWorldController();
+			case "GameWorld":
+				GameWorld.render();
 				break;
-			case "hackerWorld":
-				//loadHackerWorldController();
+			case "HackerWorld":
+				HackerWorld.render();
 				break;
 			default:
+				currentState = "MainMenu";
+				renderPage();
 				break;
 		}
 	}
 
-	changeState();
+	renderPage();
 
 })();
 
